@@ -8,7 +8,7 @@ export const schema = Joi.object({
       /^\+?(\d{10,12}|(38|)(\s?(\(\d{3}\)\s?|\d{3}\s)(\d{7}|\d{3}(\s|-)\d{2}(\s|-)?\d{2})))$/
     )
     .required(),
-    favorite: Joi.boolean(),
+  favorite: Joi.boolean(),
 });
 
 export function validateData(schema) {
@@ -23,11 +23,10 @@ export function validateData(schema) {
   };
 }
 
-  export const userSchema = Joi.object({
-      email: Joi.string()
-          .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
-          .required(),
-      password: Joi.string()
-          .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-          .required(),
-  });
+export const userSchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .lowercase()
+    .required(),
+  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
+});

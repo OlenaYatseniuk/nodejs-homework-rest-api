@@ -30,5 +30,5 @@ export const logoutUser = async (id) => {
 };
 
 export const updateUser = async (id, subscription) => {
-    return await User.findByIdAndUpdate(id, subscription, { new: true });
+  return await User.findByIdAndUpdate(id, subscription, { new: true });
 };
