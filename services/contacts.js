@@ -1,7 +1,12 @@
 import Contact from "../schemas/contact.js";
 
-export const getAllContacts = (owner, limit, skip) => {
-  return Contact.find({ owner }).limit(limit).skip(skip);
+export const getAllContacts = async (owner, limit, skip, favorite) => {
+  const filter = favorite ? { owner, favorite } : { owner };
+  const total = await Contact.count(filter);
+  const result = await Contact.find({ ...filter })
+    .limit(limit)
+    .skip(skip);
+  return { total, result };
 };
 
 export const getContactById = (contactId, owner) => {
