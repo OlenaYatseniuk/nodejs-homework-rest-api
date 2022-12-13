@@ -1,7 +1,7 @@
 import Contact from "../schemas/contact.js";
 
-export const getAllContacts = (owner) => {
-  return Contact.find({ owner });
+export const getAllContacts = (owner, limit, skip) => {
+  return Contact.find({ owner }).limit(limit).skip(skip);
 };
 
 export const getContactById = (contactId, owner) => {

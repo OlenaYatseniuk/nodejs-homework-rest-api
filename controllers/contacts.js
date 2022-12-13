@@ -10,8 +10,13 @@ import {
 export const getContacts = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const contacts = await getAllContacts(userId);
-    res.status(200).json({ data: contacts });
+    let {page = 1, limit = 5} = req.query;
+    limit = Number(limit) > 10 ? 10 : Number(limit);
+    page = Number(page) < 1 ? 1 : Number(page);
+    let skip = (page - 1) * limit;
+
+    const contacts = await getAllContacts(userId, limit, skip);
+    res.status(200).json({ data: contacts, limit, page });
   } catch (err) {
     console.log(err.message);
     next(err);
