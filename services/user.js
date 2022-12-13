@@ -29,6 +29,6 @@ export const logoutUser = async (id) => {
   return await User.findByIdAndUpdate(id, { token: null }, { new: true });
 };
 
-export const updateUser = async (id, subscription) => {
+export const updateUserSubscription = async (id, subscription) => {
   return await User.findByIdAndUpdate(id, subscription, { new: true });
 };

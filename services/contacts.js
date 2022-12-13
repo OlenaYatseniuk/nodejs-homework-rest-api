@@ -1,25 +1,32 @@
-import Contact from '../schemas/contact.js';
+import Contact from "../schemas/contact.js";
 
-export const getAllContacts =()=>{
-    return Contact.find();
-}
+export const getAllContacts = (owner) => {
+  return Contact.find({ owner });
+};
 
-export const getContactById = (id)=>{
-    return Contact.findById(id);
-}
+export const getContactById = (contactId, owner) => {
+  return Contact.findOne({ _id: contactId, owner });
+};
 
-export const createContact = (contact) =>{
-    return Contact.create(contact);
-}
+export const createContact = (contact, owner) => {
+  return Contact.create({ ...contact, owner });
+};
 
-export const deleteContactById = (id) =>{
-    return Contact.findByIdAndDelete(id);
-}
+export const deleteContactById = (contactId, owner) => {
+  return Contact.findOneAndDelete({ _id: contactId, owner });
+};
 
-export const updateContactById = (id, body) =>{
-    return Contact.findByIdAndUpdate(id, body, {new:true, runValidators: true})
-}
+export const updateContactById = (contactId, owner, body) => {
+  return Contact.findOneAndUpdate({ _id: contactId, owner }, body, {
+    new: true,
+    runValidators: true,
+  });
+};
 
-export const updateFavoriteById = (id, favorite) =>{
-    return Contact.findByIdAndUpdate(id, {favorite}, {new:true, runValidators: true})
-}
+export const updateFavoriteById = (contactId, owner, favorite) => {
+  return Contact.findOneAndUpdate(
+    { _id: contactId, owner },
+    { favorite },
+    { new: true, runValidators: true }
+  );
+};

@@ -4,7 +4,7 @@ import {
   registerNewUser,
   loginUser,
   logoutUser,
-  updateUser,
+  updateUserSubscription,
 } from "../services/user.js";
 import { createError } from "../utils/createError.js";
 import RevokedToken from "../schemas/revokedToken.js";
@@ -95,10 +95,10 @@ export const getCurrentUser = async (req, res, next) => {
   });
 };
 
-export const updateStatus = async (req, res, next) => {
-  const { _id } = req.user;
+export const updateUserStatus = async (req, res, next) => {
+    const userId = req.user.id;
   try {
-    const user = await updateUser(_id, req.body);
+    const user = await updateUserSubscription(userId, req.body);
     res.json({
       user: {
         email: user.email,
