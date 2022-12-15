@@ -12,6 +12,7 @@ export const registerNewUser = async (email, password) => {
   });
 
   await newUser.setPassword(password);
+  await newUser.setAvatarUrl(email);
   return await User.create(newUser);
 };
 
