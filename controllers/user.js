@@ -1,4 +1,9 @@
 import jwt from "jsonwebtoken";
+import gravatar from 'gravatar';
+import Jimp from 'jimp';
+import * as path from "path";
+import * as fs from "fs/promises";
+import { fileURLToPath } from "url";
 import User from "../schemas/user.js";
 import {
   registerNewUser,
@@ -11,7 +16,6 @@ import RevokedToken from "../schemas/revokedToken.js";
 
 export const register = async (req, res, next) => {
   const { email, password } = req.body;
-
   try {
     const user = await registerNewUser(email, password);
 
@@ -21,11 +25,14 @@ export const register = async (req, res, next) => {
         "Such email has already exist! Try another one, please!"
       );
     }
+    const avatar = gravatar.url('emerleite@gmail.com')
+    console.log("avatar",avatar)
 
     res.status(201).json({
       user: {
         email: user.email,
         subscription: user.subscription,
+        avatarUrl: user.avatarUrl,
       },
     });
   } catch (e) {
@@ -107,5 +114,30 @@ export const updateUserStatus = async (req, res, next) => {
     });
   } catch (e) {
     next(e);
+  }
+};
+
+export const updateUserAvatar = async (req, res, next) => {
+  const userId = req.user.id;
+  const { originalname, path: tempPath } = req.file;
+  const uniqueName = userId + "-" + originalname;
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const newPath = path.join(__dirname, "../public/avatars", uniqueName);
+  const avatarURL = `http://${process.env.HOST}:${process.env.PORT}/avatars/${uniqueName}`;
+
+  try {
+      const avatar = await Jimp.read(tempPath);
+      avatar.resize(250, 250);
+      avatar.write(tempPath);
+
+      await fs.rename(tempPath, newPath);
+      await User.findOneAndUpdate({ email: req.user.email }, { avatarURL });
+
+      res.json({
+          avatarURL: avatarURL,
+      });
+  } catch (e) {
+      await fs.unlink(tempPath);
+      next(e);
   }
 };
