@@ -24,7 +24,7 @@ app.use('/api/uploads', uploadsRouter)
 
 
 app.use((req, res) => {
-  res.status(404).json({ message: "Not found. Please use /api/contacts" });
+  res.status(404).json({ message: "Not found. Please use /api/contacts or /api/users or /api/uploads" });
 });
 
 app.use((err, req, res, next) => {
