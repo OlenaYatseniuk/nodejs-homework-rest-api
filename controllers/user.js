@@ -19,6 +19,7 @@ import { sendEmail } from "../utils/sendEmail.js";
 export const register = async (req, res, next) => {
   const { email, password } = req.body;
   const verificationToken = uuidv4();
+
   try {
     const user = await registerNewUser(email, password, verificationToken);
 
@@ -79,6 +80,7 @@ export const login = async (req, res, next) => {
 
 export const verification = async (req, res, next) => {
   const { verificationToken } = req.params;
+
   try {
     const user = await verifyUser(verificationToken);
 
@@ -87,6 +89,34 @@ export const verification = async (req, res, next) => {
     }
     res.json({
       message: "Verification successful",
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+export const repeatVerification = async (req, res, next) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email, verify: false });
+
+    if (!user) {
+      throw createError(400, "Verification has already been passed");
+    }
+
+    const verificationToken = uuidv4();
+
+    await User.findOneAndUpdate(
+      { _id: user._id },
+      { verificationToken },
+      { new: true }
+    );
+
+    await sendEmail(email, verificationToken);
+
+    res.json({
+      message: "Verification email sent",
     });
   } catch (e) {
     next(e);

@@ -34,3 +34,10 @@ export const userSchema = Joi.object({
 export const userSubscription = Joi.object({
   subscription: Joi.string().valid('starter', 'pro', 'business').required()
 });
+
+export const verificationSchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .lowercase()
+    .required(),
+})

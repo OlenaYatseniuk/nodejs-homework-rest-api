@@ -6,7 +6,7 @@ export const registerNewUser = async (email, password, verificationToken) => {
   if (foundUser) {
     return false;
   }
-  
+
   const newUser = new User({
     email,
     password: undefined,

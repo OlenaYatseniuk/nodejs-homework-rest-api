@@ -12,7 +12,7 @@ export const sendEmail = async (email, verificationToken) => {
     from: SENDGRID_SENDLER_EMAIL,
     subject: "This is your email verification",
     text: "Please, confirm your email address ",
-    html: `<strong>Please, <a href="http://${HOST}:${PORT}/api/users/verify/${verificationToken}"> confirm </a> your email address</strong>`,
+    html: `<div style="background: #DDA0DD"><strong>Please,<a href="http://${HOST}:${PORT}/api/users/verify/${verificationToken}"> confirm </a> your email address</strong></div>`,
   };
 
   await sgMail.send(msg);
