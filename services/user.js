@@ -1,7 +1,8 @@
 import User from "../schemas/user.js";
 
-export const registerNewUser = async (email, password) => {
+export const registerNewUser = async (email, password, verificationToken) => {
   const foundUser = await User.findOne({ email });
+
   if (foundUser) {
     return false;
   }
@@ -9,11 +10,27 @@ export const registerNewUser = async (email, password) => {
   const newUser = new User({
     email,
     password: undefined,
+    verificationToken,
   });
 
   await newUser.setPassword(password);
   await newUser.setAvatarUrl(email);
   return await User.create(newUser);
+};
+
+export const verifyUser = async (verificationToken) => {
+  const user = await User.findOne({ verificationToken, verify: false });
+
+  if (!user) {
+    return false;
+  }
+
+  await User.findOneAndUpdate(
+    { _id: user._id },
+    { verificationToken: null, verify: true },
+    { new: true }
+  );
+  return true;
 };
 
 export const loginUser = async (email, token) => {
